@@ -1,0 +1,31 @@
+# Ignore the `bin` and `vendor` directories
+/bin/
+/vendor/
+
+# Ignore Go build artifacts
+*.exe
+*.out
+*.a
+*.o
+*.so
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore environment files (important for security)
+.env
+.env.local
+.env.*.local
+
+# Ignore IDE and editor settings
+.vscode/
+.idea/
+*.swp
+
+# Ignore database files (if using SQLite for testing)
+*.db
+*.sqlite3
+
+# Ignore `node_modules` (if frontend is present)
+node_modules/
