@@ -13,7 +13,6 @@ import (
 )
 
 func Signup(c *gin.Context) {
-	// get email and password
 	var body struct {
 		Email    string
 		Password string
@@ -27,7 +26,6 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	// hash password
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -37,10 +35,8 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	// create new user
 	user := models.User{Email: body.Email, Password: string(hash)}
 	result := initializers.DB.Create(&user)
-
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to create user",
@@ -49,7 +45,6 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	// respond
 	c.JSON(http.StatusOK, gin.H{})
 }
 
@@ -67,7 +62,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// look up theuser in db and compare passwords
+	// ishem user in db and compare passwords
 	var user models.User
 	initializers.DB.First(&user, "email = ?", body.Email)
 	if user.ID == 0 {
@@ -93,7 +88,7 @@ func Login(c *gin.Context) {
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
-	// Sign and get the complete encoded token as a string using the secret
+	// sign jwt
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -101,7 +96,6 @@ func Login(c *gin.Context) {
 		})
 	}
 
-	// send it back
 	c.SetSameSite(http.SameSiteLaxMode) // cookie set, protects from csrf attacks
 	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
 
@@ -109,7 +103,9 @@ func Login(c *gin.Context) {
 }
 
 func Validate(c *gin.Context) {
+	user, _ := c.Get("user")
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Logged in",
+		"message": user,
 	})
 }
