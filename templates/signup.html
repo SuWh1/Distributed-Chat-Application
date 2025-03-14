@@ -1,0 +1,37 @@
+{{ define "content" }}
+<h2 class="text-xl font-bold">Signup</h2>
+<form class="mt-4 bg-white p-6 shadow-md rounded-md" onsubmit="handleSignup(event)">
+    <label class="block">Email:</label>
+    <input type="email" id="email" required class="border p-2 w-full"/>
+    
+    <label class="block mt-2">Password:</label>
+    <input type="password" id="password" required class="border p-2 w-full"/>
+
+    <button type="submit" class="mt-4 bg-green-500 text-white p-2 rounded">Signup</button>
+    <p class="error text-red-500 mt-2" id="error-msg"></p>
+</form>
+
+<p class="mt-4">Already have an account? <a href="/login" class="text-blue-500">Login</a></p>
+
+<script>
+    async function handleSignup(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch("/api/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            window.location.href = "/login"; 
+        } else {
+            const errorData = await response.json();
+            document.getElementById("error-msg").textContent = "Signup failed: " + errorData.error;
+        }
+    }
+</script>
+{{ end }}
+{{ template "base" . }}
