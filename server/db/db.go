@@ -11,7 +11,7 @@ import (
 )
 
 type Database struct {
-	db *sql.DB // lowercase db means it is private (only for this package)
+	db *sql.DB
 }
 
 func NewDatabase() (*Database, error) {

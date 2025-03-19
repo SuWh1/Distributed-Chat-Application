@@ -21,7 +21,7 @@ type CreateUserResponse struct {
 	Email    string `json:"email" db:"email"`
 }
 
-type Repository interface { // define methods for user-related operations
+type Repository interface {
 	CreateUser(ctx context.Context, user *User) (*User, error)
 }
 
