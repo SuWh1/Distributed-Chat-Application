@@ -2,12 +2,15 @@ package main
 
 import (
 	"log"
+	"server/config"
 	"server/db"
 	"server/internal/user"
 	"server/router"
 )
 
 func main() {
+	config.LoadConfig()
+
 	dbConn, err := db.NewDatabase()
 	if err != nil {
 		log.Fatalf("Error creating database: %s", err)

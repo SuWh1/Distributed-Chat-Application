@@ -3,10 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
-	"os"
+	"server/config"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -15,19 +13,14 @@ type Database struct {
 }
 
 func NewDatabase() (*Database, error) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading environment variables")
-	}
-
 	connStr := fmt.Sprintf(
 		"postgresql://%s:%s@%s:%s/%s?sslmode=%s",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_SSLMODE"),
+		config.AppConfig.DB.User,
+		config.AppConfig.DB.Password,
+		config.AppConfig.DB.Host,
+		config.AppConfig.DB.Port,
+		config.AppConfig.DB.Name,
+		config.AppConfig.DB.SSLMode,
 	)
 
 	db, err := sql.Open("postgres", connStr)
